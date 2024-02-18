@@ -4,11 +4,11 @@ import (
 	"blog-app/config"
 	"blog-app/models"
 	"blog-app/routes"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	"log"
 	"math/rand"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 const colorReset = "\033[0m"
@@ -29,6 +29,9 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 
 	r := gin.Default()
+
+	r.Use(cors.Default())
+
 	db, err := config.InitDB() // Initialize the database connection
 	if err != nil {
 		panic("Failed to connect to database")
