@@ -1,15 +1,26 @@
 import './App.css'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
+import ProtectedRoute from './components/ProtectedRoutes';
+import HomePage from './pages/HomePage';
+import ProfilePage from './pages/ProfilePage';
 
-function App() {
-  
 
+const App = () => {
   return (
-    <>
-       <h1 className="text-3xl font-bold underline text-red-500">
-            Hello world!
-        </h1>
-    </>
-  )
-}
+      <Router>
+             <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/" element={ <ProtectedRoute><HomePage /> </ProtectedRoute>}>
+            <Route path='profile' element={<ProfilePage />}/>
+          </Route>
+      </Routes>
+        <ToastContainer />
+      </Router>
+  );
+};
 
-export default App
+export default App;
