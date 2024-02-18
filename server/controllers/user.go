@@ -1,4 +1,4 @@
-package handlers
+package controllers
 
 import (
 	"blog-app/models"
@@ -62,7 +62,7 @@ func RegisterUser(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func LoginUser(db *gorm.DB, jwtKey string) gin.HandlerFunc {
+func LoginUser(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user models.User
 		var inputUser models.User
