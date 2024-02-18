@@ -62,26 +62,30 @@ func RegisterUser(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func LoginUser(db *gorm.DB) gin.HandlerFunc {
+func LoginUser(db *gorm.DB, jwtKey string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user models.User
 		var inputUser models.User
 
+		// Bind input JSON to inputUser struct
 		if err := c.ShouldBindJSON(&inputUser); err != nil {
 			c.JSON(400, gin.H{"error": err.Error()})
 			return
 		}
 
-		if err := db.Where("username = ?", inputUser.Username).First(&user).Error; err != nil {
+		err := db.Where("username = ? OR email = ?", inputUser.Username, inputUser.Email).First(&user).Error
+		if err != nil {
 			c.JSON(400, gin.H{"error": "Username or password incorrect"})
 			return
 		}
 
+		// Compare the hashed password with the input password
 		if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(inputUser.Password)); err != nil {
 			c.JSON(400, gin.H{"error": "Username or password incorrect"})
 			return
 		}
 
+		// Generate JWT token
 		expirationTime := time.Now().Add(15 * time.Minute)
 		claims := &jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
@@ -98,6 +102,7 @@ func LoginUser(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
+		// Respond with the generated token
 		c.JSON(200, gin.H{"token": tokenString})
 	}
 }
