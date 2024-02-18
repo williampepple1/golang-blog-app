@@ -1,10 +1,12 @@
-const APP_URL = import.meta.env.BASE_URL
+const APP_URL = import.meta.env.VITE_BASE_URL
 
 class AuthService {
     async login(email: string, password: string): Promise<void> {
       try {
+        console.log(APP_URL)
+        console.log(import.meta.env.VITE_BASE_URL)
         // Replace this with your actual login API call
-        const response = await fetch(`${APP_URL}/auth/login`, {
+        const response = await fetch(`${APP_URL}/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
